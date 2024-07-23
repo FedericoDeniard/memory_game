@@ -117,9 +117,6 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
     <>
       <div className="board" style={gridStyle}>
         {showCards(cards)}
-        {/* {selectedCards.map(( index) => (
-        <Card key={index} image="src/assets/icons/question_mark.png" />
-        ))} */}
       </div>
     </>
   );

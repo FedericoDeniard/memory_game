@@ -9,7 +9,7 @@ function App() {
         <h4>By Federico Deniard</h4>
       </div>
       <div className="game">
-        <Board cardAmount={2} />
+        <Board cardAmount={6} />
       </div>
     </>
   );
