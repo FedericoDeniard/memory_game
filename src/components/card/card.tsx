@@ -1,10 +1,14 @@
 import './card.css'
 
 type CardImage = string
-export const Card = ({image} : {image: CardImage}) => {
+type CardProps = {
+    image: CardImage;
+    onClick: () => void;
+};
+export const Card = ({ image, onClick }: CardProps) => {
 return (
     <>
-    <div className="card">
+    <div className="card" onClick={onClick}>
     <img className='card-image' src={image}/>
     
     </div>
