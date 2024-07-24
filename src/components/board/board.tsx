@@ -3,6 +3,11 @@ import "./board.css";
 import { fisherYatesShuffle } from "../sorts/sorts";
 import { useEffect, useState } from "react";
 
+import useSound from "use-sound";
+import cardSoundOne from "../../sounds/card-place-1.ogg";
+import cardSoundTwo from "../../sounds/card-place-4.ogg";
+import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
+
 const sortCards = (cardAmount: number) => {
   const images = [
     "assets/animals/bear.png",
@@ -50,15 +55,25 @@ const sortCards = (cardAmount: number) => {
     selectedCards.push(images[randomNumber]);
     selectedCards.push(images[randomNumber]);
   }
-
   fisherYatesShuffle(selectedCards);
+
   return selectedCards;
 };
 
 export const Board = ({ cardAmount }: { cardAmount: number }) => {
   const [cards, setCards] = useState(sortCards(cardAmount));
+  const resetGame = () => {
+    setCards(sortCards(cardAmount));
+    setClickedCards([]);
+    setGuessedCards([]);
+  };
+
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
+
+  const [playSoundCardOne] = useSound(cardSoundOne);
+  const [playSoundCardTwo] = useSound(cardSoundTwo);
+  const [playShuffleCards] = useSound(shuffleCards);
 
   const gridStyle = {
     gridTemplateColumns: `repeat(${
@@ -74,22 +89,17 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
     ) {
       const newClickedCards = [...clickedCards, index];
       setClickedCards(newClickedCards);
-
+      playSoundCardOne();
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
         }
         setTimeout(() => {
           setClickedCards([]);
+          playSoundCardTwo();
         }, 1000);
       }
     }
-  };
-
-  const resetGame = () => {
-    setCards(sortCards(cardAmount));
-    setClickedCards([]);
-    setGuessedCards([]);
   };
 
   useEffect(() => {
@@ -108,7 +118,9 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
             ? image
             : "assets/icons/question_mark.png"
         }
-        onClick={() => handleCardClick(index)}
+        onClick={() => {
+          handleCardClick(index);
+        }}
       />
     ));
   };
