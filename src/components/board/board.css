@@ -1,5 +1,6 @@
 .board {
     width: 60%;
+    min-width: fit-content;
     display: grid;
     gap: 15px;
     justify-content: center;

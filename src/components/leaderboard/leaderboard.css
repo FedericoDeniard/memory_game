@@ -1,0 +1,35 @@
+.leaderboard {
+    width: 60%;
+    min-width: 645px;
+    border-radius: 10px;
+    justify-content: center;
+    margin: 0;
+    margin-top: 40px;
+}
+
+.leaderboard * {
+    margin: 0;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .leaderboard {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+.leaderboard-filter {
+    display: flex;
+    justify-content: space-evenly;
+    height: fit-content;
+    border-radius: 10px;
+    border: 2px solid #000;
+}
+
+.leaderboard-list * {
+    list-style-type: none;
+    font-size: 17px;
+    font-weight: 400;
+}
