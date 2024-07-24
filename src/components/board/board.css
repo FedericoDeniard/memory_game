@@ -4,3 +4,11 @@
     gap: 15px;
     justify-content: center;
 }
+
+@media (max-width: 768px) {
+    .board {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+    }
+}
