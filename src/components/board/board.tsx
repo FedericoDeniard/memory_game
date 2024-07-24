@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import useSound from "use-sound";
 import cardSoundOne from "../../sounds/card-place-1.ogg";
 import cardSoundTwo from "../../sounds/card-place-4.ogg";
-import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
 import goodSound from "../../sounds/jingles_NES09.ogg";
 import badSound from "../../sounds/jingles_NES10.ogg";
 import winSound from "../../sounds/jingles_NES03.ogg";
@@ -76,7 +75,6 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
 
   const [playSoundCardOne] = useSound(cardSoundOne);
   const [playSoundCardTwo] = useSound(cardSoundTwo);
-  const [playShuffleCards] = useSound(shuffleCards);
   const [playGoodSound] = useSound(goodSound);
   const [playBadSound] = useSound(badSound);
   const [playWinSound] = useSound(winSound);
@@ -105,7 +103,9 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
         }
         setTimeout(() => {
           setClickedCards([]);
-          playSoundCardTwo();
+          if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
+            playSoundCardTwo();
+          }
         }, 1000);
       }
     }
