@@ -113,12 +113,18 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
 
   useEffect(() => {
     if (guessedCards.length === cards.length) {
-      const timer = setTimeout(() => {
-        resetGame();
+      const soundTimer = setTimeout(() => {
         playWinSound();
+      }, 500);
+
+      const resetTimer = setTimeout(() => {
+        resetGame();
       }, 3000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(soundTimer);
+        clearTimeout(resetTimer);
+      };
     }
   }, [guessedCards, cards]);
 
