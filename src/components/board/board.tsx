@@ -9,6 +9,7 @@ import cardSoundTwo from "../../sounds/card-place-4.ogg";
 import goodSound from "../../sounds/jingles_NES09.ogg";
 import badSound from "../../sounds/jingles_NES10.ogg";
 import winSound from "../../sounds/jingles_NES03.ogg";
+import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
 
 const sortCards = (cardAmount: number) => {
   const images = [
@@ -64,11 +65,6 @@ const sortCards = (cardAmount: number) => {
 
 export const Board = ({ cardAmount }: { cardAmount: number }) => {
   const [cards, setCards] = useState(sortCards(cardAmount));
-  const resetGame = () => {
-    setCards(sortCards(cardAmount));
-    setClickedCards([]);
-    setGuessedCards([]);
-  };
 
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
@@ -78,6 +74,14 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
   const [playGoodSound] = useSound(goodSound);
   const [playBadSound] = useSound(badSound);
   const [playWinSound] = useSound(winSound);
+  const [playShuffleSound] = useSound(shuffleCards);
+
+  const resetGame = () => {
+    setCards(sortCards(cardAmount));
+    setClickedCards([]);
+    setGuessedCards([]);
+    playShuffleSound();
+  };
 
   const gridStyle = {
     gridTemplateColumns: `repeat(${
