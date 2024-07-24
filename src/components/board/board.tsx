@@ -5,36 +5,36 @@ import { useEffect, useState } from "react";
 
 const sortCards = (cardAmount: number) => {
   const images = [
-    "src/assets/animals/bear.png",
-    "src/assets/animals/buffalo.png",
-    "src/assets/animals/chick.png",
-    "src/assets/animals/chicken.png",
-    "src/assets/animals/cow.png",
-    "src/assets/animals/crocodile.png",
-    "src/assets/animals/dog.png",
-    "src/assets/animals/duck.png",
-    "src/assets/animals/elephant.png",
-    "src/assets/animals/frog.png",
-    "src/assets/animals/giraffe.png",
-    "src/assets/animals/goat.png",
-    "src/assets/animals/gorilla.png",
-    "src/assets/animals/hippo.png",
-    "src/assets/animals/horse.png",
-    "src/assets/animals/monkey.png",
-    "src/assets/animals/moose.png",
-    "src/assets/animals/narwhal.png",
-    "src/assets/animals/owl.png",
-    "src/assets/animals/panda.png",
-    "src/assets/animals/parrot.png",
-    "src/assets/animals/penguin.png",
-    "src/assets/animals/pig.png",
-    "src/assets/animals/rabbit.png",
-    "src/assets/animals/rhino.png",
-    "src/assets/animals/sloth.png",
-    "src/assets/animals/snake.png",
-    "src/assets/animals/walrus.png",
-    "src/assets/animals/whale.png",
-    "src/assets/animals/zebra.png",
+    "assets/animals/bear.png",
+    "assets/animals/buffalo.png",
+    "assets/animals/chick.png",
+    "assets/animals/chicken.png",
+    "assets/animals/cow.png",
+    "assets/animals/crocodile.png",
+    "assets/animals/dog.png",
+    "assets/animals/duck.png",
+    "assets/animals/elephant.png",
+    "assets/animals/frog.png",
+    "assets/animals/giraffe.png",
+    "assets/animals/goat.png",
+    "assets/animals/gorilla.png",
+    "assets/animals/hippo.png",
+    "assets/animals/horse.png",
+    "assets/animals/monkey.png",
+    "assets/animals/moose.png",
+    "assets/animals/narwhal.png",
+    "assets/animals/owl.png",
+    "assets/animals/panda.png",
+    "assets/animals/parrot.png",
+    "assets/animals/penguin.png",
+    "assets/animals/pig.png",
+    "assets/animals/rabbit.png",
+    "assets/animals/rhino.png",
+    "assets/animals/sloth.png",
+    "assets/animals/snake.png",
+    "assets/animals/walrus.png",
+    "assets/animals/whale.png",
+    "assets/animals/zebra.png",
   ];
 
   let selectedCards: string[] = [];
@@ -106,13 +106,12 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
         image={
           guessedCards.includes(index) || clickedCards.includes(index)
             ? image
-            : "src/assets/icons/question_mark.png"
+            : "assets/icons/question_mark.png"
         }
         onClick={() => handleCardClick(index)}
       />
     ));
   };
-
   return (
     <>
       <div className="board" style={gridStyle}>

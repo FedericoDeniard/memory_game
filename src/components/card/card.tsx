@@ -1,17 +1,16 @@
-import './card.css'
+import "./card.css";
 
-type CardImage = string
+type CardImage = string;
 type CardProps = {
-    image: CardImage;
-    onClick: () => void;
+  image: CardImage;
+  onClick: () => void;
 };
 export const Card = ({ image, onClick }: CardProps) => {
-return (
+  return (
     <>
-    <div className="card" onClick={onClick}>
-    <img className='card-image' src={image}/>
-    
-    </div>
+      <div className="card" onClick={onClick}>
+        <img className="card-image" src={image} />
+      </div>
     </>
-)
-}
+  );
+};
