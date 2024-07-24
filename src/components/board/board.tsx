@@ -7,6 +7,9 @@ import useSound from "use-sound";
 import cardSoundOne from "../../sounds/card-place-1.ogg";
 import cardSoundTwo from "../../sounds/card-place-4.ogg";
 import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
+import goodSound from "../../sounds/jingles_NES09.ogg";
+import badSound from "../../sounds/jingles_NES10.ogg";
+import winSound from "../../sounds/jingles_NES03.ogg";
 
 const sortCards = (cardAmount: number) => {
   const images = [
@@ -74,6 +77,9 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
   const [playSoundCardOne] = useSound(cardSoundOne);
   const [playSoundCardTwo] = useSound(cardSoundTwo);
   const [playShuffleCards] = useSound(shuffleCards);
+  const [playGoodSound] = useSound(goodSound);
+  const [playBadSound] = useSound(badSound);
+  const [playWinSound] = useSound(winSound);
 
   const gridStyle = {
     gridTemplateColumns: `repeat(${
@@ -93,6 +99,9 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
+          playGoodSound();
+        } else {
+          playBadSound();
         }
         setTimeout(() => {
           setClickedCards([]);
@@ -104,11 +113,15 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
 
   useEffect(() => {
     if (guessedCards.length === cards.length) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         resetGame();
+        playWinSound();
       }, 3000);
+
+      return () => clearTimeout(timer);
     }
-  });
+  }, [guessedCards, cards]);
+
   const showCards = (cards: string[]) => {
     return cards.map((image, index) => (
       <Card
