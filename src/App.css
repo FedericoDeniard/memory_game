@@ -3,10 +3,15 @@
   padding: 0;
   box-sizing: border-box;
   text-align: center;
-
 }
 
 .game {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.leaderboard-container {
   display: flex;
   gap: 20px;
   justify-content: center;

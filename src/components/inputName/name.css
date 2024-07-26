@@ -1,0 +1,39 @@
+.user-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    gap: 20px;
+}
+
+.user-input-input {
+    width: 200px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #a8a8a8;
+    border-color: #000;
+    border: none;
+    text-align: center;
+    font-size: 18px;
+    color: #000;
+}
+
+.user-input-button {
+    width: 100px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #a8a8a8;
+    border: 2px solid #000;
+    border: none;
+    cursor: pointer;
+    color: #000;
+    font-size: 18px;
+}
+
+.user-input-button:enabled:hover {
+    border: 2px solid #fff;
+}
+
+.user-input-button:disabled {
+    cursor: not-allowed;
+}

@@ -1,7 +1,7 @@
 import { Card } from "../card/card";
 import "./board.css";
 import { fisherYatesShuffle } from "../sorts/sorts";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import useSound from "use-sound";
 import cardSoundOne from "../../sounds/card-place-1.ogg";
@@ -10,6 +10,9 @@ import goodSound from "../../sounds/jingles_NES09.ogg";
 import badSound from "../../sounds/jingles_NES10.ogg";
 import winSound from "../../sounds/jingles_NES03.ogg";
 import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
+
+import { get_scores, save_score, Score } from "../../tools/fetch";
+import { get_date, Chronometer } from "../../tools/time";
 
 const sortCards = (cardAmount: number) => {
   const images = [
@@ -46,7 +49,6 @@ const sortCards = (cardAmount: number) => {
   ];
 
   let selectedCards: string[] = [];
-
   let selectedNumbers: number[] = [];
 
   for (let i = 0; i < cardAmount; i++) {
@@ -63,9 +65,22 @@ const sortCards = (cardAmount: number) => {
   return selectedCards;
 };
 
-export const Board = ({ cardAmount }: { cardAmount: number }) => {
-  const [cards, setCards] = useState(sortCards(cardAmount));
+export const Board = ({
+  cardAmount,
+  usernameProp,
+  uuidProp,
+  updateScores,
+}: {
+  cardAmount: number;
+  usernameProp: string;
+  uuidProp: string;
+  updateScores: () => void;
+}) => {
+  const username = usernameProp;
+  const uuid = uuidProp;
 
+  const chronometerRef = useRef<Chronometer | null>(null);
+  const [cards, setCards] = useState(sortCards(cardAmount));
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
 
@@ -76,44 +91,70 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
   const [playWinSound] = useSound(winSound);
   const [playShuffleSound] = useSound(shuffleCards);
 
+  const startChronometer = () => {
+    if (!chronometerRef.current) {
+      chronometerRef.current = new Chronometer();
+    }
+    chronometerRef.current.start();
+  };
+
+  const stopChronometer = () => {
+    chronometerRef.current?.stop();
+  };
+
+  const resetChronometer = () => {
+    chronometerRef.current?.reset();
+  };
+
+  const getElapsedTime = () => {
+    return chronometerRef.current?.getElapsedTime() || 0;
+  };
+
   const resetGame = () => {
+    stopChronometer();
+    const elapsedTime = getElapsedTime();
+    const now = get_date();
+    const last_record: Score = {
+      id: uuid,
+      username: username,
+      time: elapsedTime,
+      date: now,
+    };
+
+    get_scores("https://api-memory-game.onrender.com/leaderboard").then(
+      (data) => {
+        const uuidExists = data.findIndex((score) => score.id === uuid);
+        if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
+          save_score(
+            "https://api-memory-game.onrender.com/leaderboard/new_record",
+            last_record
+          )
+            .then(() => {
+              updateScores();
+            })
+            .catch((error) => {
+              console.error("Error saving score:", error);
+            });
+        }
+      }
+    );
+
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
     playShuffleSound();
+    console.log(last_record);
+
+    resetChronometer();
+    startChronometer();
   };
 
-  const gridStyle = {
-    gridTemplateColumns: `repeat(${
-      (cards.length / 2) % 2 === 0 ? 4 : 3
-    }, minmax(150px, 1fr))`,
-  };
-
-  const handleCardClick = (index: number) => {
-    if (
-      clickedCards.length < 2 &&
-      !clickedCards.includes(index) &&
-      !guessedCards.includes(index)
-    ) {
-      const newClickedCards = [...clickedCards, index];
-      setClickedCards(newClickedCards);
-      playSoundCardOne();
-      if (newClickedCards.length === 2) {
-        if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
-          setGuessedCards([...guessedCards, ...newClickedCards]);
-          playGoodSound();
-        } else {
-          playBadSound();
-        }
-        setTimeout(() => {
-          setClickedCards([]);
-          if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
-            playSoundCardTwo();
-          }
-        }, 1000);
-      }
-    }
-  };
+  useEffect(() => {
+    startChronometer();
+    return () => {
+      stopChronometer();
+    };
+  }, []);
 
   useEffect(() => {
     if (guessedCards.length === cards.length) {
@@ -147,6 +188,39 @@ export const Board = ({ cardAmount }: { cardAmount: number }) => {
       />
     ));
   };
+
+  const handleCardClick = (index: number) => {
+    if (
+      clickedCards.length < 2 &&
+      !clickedCards.includes(index) &&
+      !guessedCards.includes(index)
+    ) {
+      const newClickedCards = [...clickedCards, index];
+      setClickedCards(newClickedCards);
+      playSoundCardOne();
+      if (newClickedCards.length === 2) {
+        if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
+          setGuessedCards([...guessedCards, ...newClickedCards]);
+          playGoodSound();
+        } else {
+          playBadSound();
+        }
+        setTimeout(() => {
+          setClickedCards([]);
+          if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
+            playSoundCardTwo();
+          }
+        }, 1000);
+      }
+    }
+  };
+
+  const gridStyle = {
+    gridTemplateColumns: `repeat(${
+      (cards.length / 2) % 2 === 0 ? 4 : 3
+    }, minmax(150px, 1fr))`,
+  };
+
   return (
     <>
       <div className="board" style={gridStyle}>
