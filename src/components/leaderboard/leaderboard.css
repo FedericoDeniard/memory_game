@@ -28,6 +28,10 @@
     border: 2px solid #000;
 }
 
+.leaderboard-filter h4 {
+    cursor: pointer;
+}
+
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
