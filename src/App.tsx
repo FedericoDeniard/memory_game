@@ -3,6 +3,8 @@ import { Board } from "./components/board/board";
 import { Leaderboard } from "./components/leaderboard/leaderboard";
 
 function App() {
+  const username = "Federico";
+  const uuid = crypto.randomUUID();
   return (
     <>
       <div>
@@ -10,7 +12,7 @@ function App() {
         <h4>By Federico Deniard</h4>
       </div>
       <div className="game">
-        <Board cardAmount={6} />
+        <Board cardAmount={2} usernameProp={username} uuidProp={uuid} />
       </div>
       <div className="leadearboard-container">
         <Leaderboard />
