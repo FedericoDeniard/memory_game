@@ -9,7 +9,11 @@ import { InputName } from "./components/inputName/name";
 function App() {
   const [scores, setScores] = useState<Score[]>([]);
   const [username, setUsername] = useState<string>("");
-  const uuid = crypto.randomUUID();
+  const [uuid, setUuid] = useState<string>("");
+
+  useEffect(() => {
+    setUuid(crypto.randomUUID());
+  }, []);
 
   useEffect(() => {
     updateScores();
