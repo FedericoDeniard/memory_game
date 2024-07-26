@@ -47,7 +47,7 @@ export const Leaderboard = ({ scoresProp }: { scoresProp: Score[] }) => {
               <td>
                 {player.username}#{player.id.slice(-4).toUpperCase()}
               </td>
-              <td>{player.time}</td>
+              <td>{player.time / 1000}s</td>
             </tr>
           ))}
         </tbody>
