@@ -69,10 +69,12 @@ export const Board = ({
   cardAmount,
   usernameProp,
   uuidProp,
+  updateScores,
 }: {
   cardAmount: number;
   usernameProp: string;
   uuidProp: string;
+  updateScores: () => void;
 }) => {
   const username = usernameProp;
   const uuid = uuidProp;
@@ -122,12 +124,13 @@ export const Board = ({
     get_scores("http://localhost:5000/leaderboard").then((data) => {
       const uuidExists = data.findIndex((score) => score.id === uuid);
       if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
-        save_score(
-          "http://localhost:5000/leaderboard/new_record",
-          last_record
-        ).catch((error) => {
-          console.error("Error saving score:", error);
-        });
+        save_score("http://localhost:5000/leaderboard/new_record", last_record)
+          .then(() => {
+            updateScores();
+          })
+          .catch((error) => {
+            console.error("Error saving score:", error);
+          });
       }
     });
 

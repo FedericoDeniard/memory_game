@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import "./leaderboard.css";
-import { get_scores, Score } from "../../tools/fetch";
+import { Score } from "../../tools/fetch";
 
-export const Leaderboard = () => {
-  const [scores, setScores] = useState<Score[]>([]);
+export const Leaderboard = ({ scoresProp }: { scoresProp: Score[] }) => {
+  const [scores, setScores] = useState<Score[]>(scoresProp);
 
   useEffect(() => {
-    get_scores("http://localhost:5000/leaderboard")
-      .then((data) => {
-        setScores(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching scores:", error);
-      });
-  }, []);
+    setScores(scoresProp);
+  }, [scoresProp]);
 
   return (
     <div className="leaderboard">
@@ -22,15 +16,26 @@ export const Leaderboard = () => {
         <h4>Top 10</h4>
         <h4>Last 10</h4>
       </div>
-      <div className="leaderboard-list">
-        <ul>
+      <table className="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Username</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
           {scores.map((player, index) => (
-            <li key={index}>
-              {player.date} | {player.username} | {player.time}
-            </li>
+            <tr key={index}>
+              <td>{player.date}</td>
+              <td>
+                {player.username}#{player.id.slice(-4).toUpperCase()}
+              </td>
+              <td>{player.time}</td>
+            </tr>
           ))}
-        </ul>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
 };
