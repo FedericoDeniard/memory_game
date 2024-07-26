@@ -121,18 +121,23 @@ export const Board = ({
       date: now,
     };
 
-    get_scores("http://localhost:5000/leaderboard").then((data) => {
-      const uuidExists = data.findIndex((score) => score.id === uuid);
-      if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
-        save_score("http://localhost:5000/leaderboard/new_record", last_record)
-          .then(() => {
-            updateScores();
-          })
-          .catch((error) => {
-            console.error("Error saving score:", error);
-          });
+    get_scores("https://api-memory-game.onrender.com/leaderboard").then(
+      (data) => {
+        const uuidExists = data.findIndex((score) => score.id === uuid);
+        if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
+          save_score(
+            "https://api-memory-game.onrender.com/leaderboard/new_record",
+            last_record
+          )
+            .then(() => {
+              updateScores();
+            })
+            .catch((error) => {
+              console.error("Error saving score:", error);
+            });
+        }
       }
-    });
+    );
 
     setCards(sortCards(cardAmount));
     setClickedCards([]);

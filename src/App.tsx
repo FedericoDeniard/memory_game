@@ -15,7 +15,7 @@ function App() {
     updateScores();
   }, []);
   const updateScores = () => {
-    get_scores("http://localhost:5000/leaderboard")
+    get_scores("https://api-memory-game.onrender.com/leaderboard")
       .then((data) => {
         setScores(data);
       })
