@@ -32,6 +32,11 @@
     cursor: pointer;
 }
 
+.leaderboard-filter .active {
+    background-color: #444;
+    border-radius: 80px;
+}
+
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
