@@ -2,7 +2,7 @@ export type Score = {
     id: string;
     username: string;
     time: number;
-    date: string;
+    date: number;
 }
 
 export const save_score = (url: string, data: Score) => {

@@ -2,18 +2,7 @@
 
 export const get_date = () => {
     let now = new Date();
-    let date =
-        now.getFullYear() +
-        "/" +
-        (now.getMonth() + 1) +
-        "/" +
-        now.getDate() +
-        " " +
-        now.getHours() +
-        ":" +
-        now.getMinutes() +
-        ":" +
-        now.getSeconds();
+    let date = now.getTime();
     return date
 }
 export class Chronometer {

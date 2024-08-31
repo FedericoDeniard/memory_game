@@ -57,15 +57,19 @@ export const Leaderboard = ({
               </tr>
             </thead>
             <tbody>
-              {displayedScores.map((player, index) => (
-                <tr key={index}>
-                  <td>{player.date}</td>
-                  <td>
-                    {player.username}#{player.id.slice(-4).toUpperCase()}
-                  </td>
-                  <td>{player.time / 1000}s</td>
-                </tr>
-              ))}
+              {displayedScores.map((player, index) => {
+                const date = new Date(player.date);
+                const formattedDate = date.toLocaleString();
+                return (
+                  <tr key={index}>
+                    <td>{formattedDate}</td>
+                    <td>
+                      {player.username}#{player.id.slice(-4).toUpperCase()}
+                    </td>
+                    <td>{player.time / 1000}s</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </>
         </table>

@@ -22,7 +22,7 @@ function App() {
     updateScores();
   }, []);
   const updateScores = () => {
-    get_scores("https://api-memory-game.onrender.com/leaderboard")
+    get_scores("https://api-memory-game-1.onrender.com/leaderboard")
       .then((data) => {
         if (filter === "last_10") {
           last_10({ scores, setScores });

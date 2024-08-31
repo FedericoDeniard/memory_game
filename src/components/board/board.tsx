@@ -121,12 +121,12 @@ export const Board = ({
       date: now,
     };
 
-    get_scores("https://api-memory-game.onrender.com/leaderboard").then(
+    get_scores("https://api-memory-game-1.onrender.com/leaderboard").then(
       (data) => {
         const uuidExists = data.findIndex((score) => score.id === uuid);
         if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
           save_score(
-            "https://api-memory-game.onrender.com/leaderboard/new_record",
+            "https://api-memory-game-1.onrender.com/leaderboard/new_record",
             last_record
           )
             .then(() => {
