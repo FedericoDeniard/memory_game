@@ -29,7 +29,7 @@ export const InputName = ({
       />
       <button
         className="user-input-button"
-        disabled={inputValue === ""}
+        disabled={inputValue.length < 4 || inputValue.length > 10}
         type="submit"
         onClick={() => setUsername(inputValue)}
       >
