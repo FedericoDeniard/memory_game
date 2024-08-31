@@ -143,7 +143,6 @@ export const Board = ({
     setClickedCards([]);
     setGuessedCards([]);
     playShuffleSound();
-    console.log(last_record);
 
     resetChronometer();
     startChronometer();
