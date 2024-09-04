@@ -71,7 +71,9 @@ export const Leaderboard = ({
                     return (
                       <tr key={index}>
                         <td>{formattedDate}</td>
-                        <td>{player.username}</td>
+                        <td>
+                          {player.username}#{player.id}
+                        </td>
                         <td>{player.time / 1000}s</td>
                       </tr>
                     );
