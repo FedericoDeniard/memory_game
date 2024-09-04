@@ -11,7 +11,7 @@ import badSound from "../../sounds/jingles_NES10.ogg";
 import winSound from "../../sounds/jingles_NES03.ogg";
 import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
 
-import { get_scores, save_score, Score } from "../../tools/fetch";
+import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
 
 const sortCards = (cardAmount: number) => {
@@ -110,34 +110,32 @@ export const Board = ({
     return chronometerRef.current?.getElapsedTime() || 0;
   };
 
+  const [lastRecord, setLastRecord] = useState<Score | null>(null);
+
   const resetGame = () => {
     stopChronometer();
     const elapsedTime = getElapsedTime();
     const now = get_date();
-    const last_record: Score = {
-      id: uuid,
-      username: username,
-      time: elapsedTime,
-      date: now,
-    };
 
-    get_scores("https://api-memory-game-1.onrender.com/leaderboard").then(
-      (data) => {
-        const uuidExists = data.findIndex((score) => score.id === uuid);
-        if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
-          save_score(
-            "https://api-memory-game-1.onrender.com/leaderboard/new_record",
-            last_record
-          )
-            .then(() => {
-              updateScores();
-            })
-            .catch((error) => {
-              console.error("Error saving score:", error);
-            });
-        }
-      }
-    );
+    if (lastRecord == null || elapsedTime < lastRecord.time) {
+      const last_record: Score = {
+        id: uuid,
+        username: username,
+        time: elapsedTime,
+        date: now,
+      };
+      setLastRecord(last_record);
+      save_score(
+        "https://api-memory-game-1.onrender.com/leaderboard/new_record",
+        last_record
+      )
+        .then(() => {
+          updateScores();
+        })
+        .catch((error) => {
+          console.error("Error saving score:", error);
+        });
+    }
 
     setCards(sortCards(cardAmount));
     setClickedCards([]);

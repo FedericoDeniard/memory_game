@@ -1,25 +1,19 @@
-import { useEffect, useState } from "react";
 import "./leaderboard.css";
 import { Score } from "../../tools/fetch";
 
-import { top_10, last_10 } from "../sorts/sorts";
-
 export const Leaderboard = ({
-  scoresProp,
+  lastScoresProp,
+  topScoresProp,
   setFilter,
   filter,
 }: {
-  scoresProp: Score[];
+  lastScoresProp: Score[];
+  topScoresProp: Score[];
   setFilter: (filter: string) => void;
   filter: string;
 }) => {
-  const [scores, setScores] = useState<Score[]>(scoresProp);
-
-  const displayedScores = scores.slice(0, 10);
-
-  useEffect(() => {
-    setScores(scoresProp);
-  }, [scoresProp]);
+  let lastScores = lastScoresProp;
+  let topScores = topScoresProp;
 
   return (
     <div className="leaderboard">
@@ -27,7 +21,7 @@ export const Leaderboard = ({
       <div className="leaderboard-filter">
         <h4
           onClick={() => {
-            last_10({ scores, setScores }), setFilter("last_10");
+            setFilter("last_10");
           }}
           className={filter === "last_10" ? "active" : ""}
         >
@@ -35,14 +29,14 @@ export const Leaderboard = ({
         </h4>
         <h4
           onClick={() => {
-            top_10({ scores, setScores }), setFilter("top_10");
+            setFilter("top_10");
           }}
           className={filter === "top_10" ? "active" : ""}
         >
           Top 10
         </h4>
       </div>
-      {scores.length === 0 ? (
+      {topScores.length === 0 || lastScores.length === 0 ? (
         <div className="loader-container">
           <div className="loader"></div>
         </div>
@@ -57,19 +51,31 @@ export const Leaderboard = ({
               </tr>
             </thead>
             <tbody>
-              {displayedScores.map((player, index) => {
-                const date = new Date(player.date);
-                const formattedDate = date.toLocaleString();
-                return (
-                  <tr key={index}>
-                    <td>{formattedDate}</td>
-                    <td>
-                      {player.username}#{player.id.slice(-4).toUpperCase()}
-                    </td>
-                    <td>{player.time / 1000}s</td>
-                  </tr>
-                );
-              })}
+              {filter === "last_10"
+                ? lastScores.map((player, index) => {
+                    const date = new Date(player.date);
+                    const formattedDate = date.toLocaleString();
+                    return (
+                      <tr key={index}>
+                        <td>{formattedDate}</td>
+                        <td>
+                          {player.username}#{player.id}
+                        </td>
+                        <td>{player.time / 1000}s</td>
+                      </tr>
+                    );
+                  })
+                : topScores.map((player, index) => {
+                    const date = new Date(player.date);
+                    const formattedDate = date.toLocaleString();
+                    return (
+                      <tr key={index}>
+                        <td>{formattedDate}</td>
+                        <td>{player.username}</td>
+                        <td>{player.time / 1000}s</td>
+                      </tr>
+                    );
+                  })}
             </tbody>
           </>
         </table>

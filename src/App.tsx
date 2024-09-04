@@ -5,37 +5,34 @@ import { Leaderboard } from "./components/leaderboard/leaderboard";
 import { Score } from "./tools/fetch";
 import { get_scores } from "./tools/fetch";
 import { InputName } from "./components/inputName/name";
-import { top_10, last_10 } from "./components/sorts/sorts";
 
 function App() {
-  const [scores, setScores] = useState<Score[]>([]);
   const [username, setUsername] = useState<string>("");
   const [uuid, setUuid] = useState<string>("");
 
-  const [filter, setFilter] = useState<string>("");
+  let [lastScores, setLastScores] = useState<Score[]>([]);
+  let [topScores, setTopScores] = useState<Score[]>([]);
+
+  const [filter, setFilter] = useState<string>("last_10");
 
   useEffect(() => {
     setUuid(crypto.randomUUID());
   }, []);
 
+  const updateScores = async () => {
+    let lastScoresFetch = await get_scores(
+      "https://api-memory-game-1.onrender.com/last-leaderboard"
+    );
+    setLastScores(lastScoresFetch);
+    let topScoresFetch = await get_scores(
+      "https://api-memory-game-1.onrender.com/top-leaderboard"
+    );
+    setTopScores(topScoresFetch);
+  };
+
   useEffect(() => {
     updateScores();
   }, []);
-  const updateScores = () => {
-    get_scores("https://api-memory-game-1.onrender.com/leaderboard")
-      .then((data) => {
-        if (filter === "last_10") {
-          last_10({ scores, setScores });
-        } else if (filter === "top_10") {
-          top_10({ scores, setScores });
-        }
-
-        setScores(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching scores:", error);
-      });
-  };
 
   return (
     <>
@@ -57,7 +54,8 @@ function App() {
           </div>
           <div className="leaderboard-container">
             <Leaderboard
-              scoresProp={scores}
+              lastScoresProp={lastScores}
+              topScoresProp={topScores}
               setFilter={setFilter}
               filter={filter}
             />
