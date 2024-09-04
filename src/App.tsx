@@ -5,6 +5,7 @@ import { Leaderboard } from "./components/leaderboard/leaderboard";
 import { Score } from "./tools/fetch";
 import { get_scores } from "./tools/fetch";
 import { InputName } from "./components/inputName/name";
+import { getUUID } from "./tools/localStorage";
 
 function App() {
   const [username, setUsername] = useState<string>("");
@@ -16,7 +17,7 @@ function App() {
   const [filter, setFilter] = useState<string>("last_10");
 
   useEffect(() => {
-    setUuid(crypto.randomUUID());
+    setUuid(getUUID());
   }, []);
 
   const updateScores = async () => {
