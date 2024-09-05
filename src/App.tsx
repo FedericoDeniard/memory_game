@@ -4,41 +4,38 @@ import { Board } from "./components/board/board";
 import { Leaderboard } from "./components/leaderboard/leaderboard";
 import { Score } from "./tools/fetch";
 import { get_scores } from "./tools/fetch";
-import { InputName } from "./components/inputName/name";
-import { getUUID } from "./tools/localStorage";
+import { UserForm } from "./components/inputName/name";
 
 function App() {
   const [username, setUsername] = useState<string>("");
-  const [uuid, setUuid] = useState<string>("");
 
-  let [lastScores, setLastScores] = useState<Score[]>([]);
-  let [topScores, setTopScores] = useState<Score[]>([]);
+
+  const [lastScores, setLastScores] = useState<Score[]>([]);
+  const [topScores, setTopScores] = useState<Score[]>([]);
 
   const [filter, setFilter] = useState<string>("last_10");
 
-  useEffect(() => {
-    setUuid(getUUID());
-  }, []);
+
 
   const updateScores = async () => {
-    let lastScoresFetch = await get_scores(
-      "https://api-memory-game-1.onrender.com/last-leaderboard"
+    const lastScoresFetch = await get_scores(
+      "http://localhost:3000/last-leaderboard"
     );
     setLastScores(lastScoresFetch);
-    let topScoresFetch = await get_scores(
-      "https://api-memory-game-1.onrender.com/top-leaderboard"
+    const topScoresFetch = await get_scores(
+      "http://localhost:3000/top-leaderboard"
     );
     setTopScores(topScoresFetch);
   };
 
   useEffect(() => {
-    updateScores();
+      updateScores();
   }, []);
 
   return (
     <>
       {username === "" ? (
-        <InputName setUsername={setUsername} />
+        <UserForm setUsername={setUsername}  />
       ) : (
         <>
           <div>
@@ -48,8 +45,6 @@ function App() {
           <div className="game">
             <Board
               cardAmount={6}
-              usernameProp={username}
-              uuidProp={uuid}
               updateScores={updateScores}
             />
           </div>

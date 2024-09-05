@@ -48,8 +48,8 @@ const sortCards = (cardAmount: number) => {
     "assets/animals/zebra.png",
   ];
 
-  let selectedCards: string[] = [];
-  let selectedNumbers: number[] = [];
+  const selectedCards: string[] = [];
+  const selectedNumbers: number[] = [];
 
   for (let i = 0; i < cardAmount; i++) {
     let randomNumber = Math.floor(Math.random() * images.length);
@@ -67,17 +67,11 @@ const sortCards = (cardAmount: number) => {
 
 export const Board = ({
   cardAmount,
-  usernameProp,
-  uuidProp,
   updateScores,
 }: {
   cardAmount: number;
-  usernameProp: string;
-  uuidProp: string;
   updateScores: () => void;
 }) => {
-  const username = usernameProp;
-  const uuid = uuidProp;
 
   const chronometerRef = useRef<Chronometer | null>(null);
   const [cards, setCards] = useState(sortCards(cardAmount));
@@ -110,23 +104,19 @@ export const Board = ({
     return chronometerRef.current?.getElapsedTime() || 0;
   };
 
-  const [lastRecord, setLastRecord] = useState<Score | null>(null);
-
   const resetGame = () => {
     stopChronometer();
     const elapsedTime = getElapsedTime();
     const now = get_date();
 
-    if (lastRecord == null || elapsedTime < lastRecord.time) {
+    
       const last_record: Score = {
-        id: uuid,
-        username: username,
+        username: "",
         time: elapsedTime,
         date: now,
       };
-      setLastRecord(last_record);
       save_score(
-        "https://api-memory-game-1.onrender.com/leaderboard/new_record",
+        "http://localhost:3000/leaderboard/new_record",
         last_record
       )
         .then(() => {
@@ -135,7 +125,7 @@ export const Board = ({
         .catch((error) => {
           console.error("Error saving score:", error);
         });
-    }
+    
 
     setCards(sortCards(cardAmount));
     setClickedCards([]);

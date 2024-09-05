@@ -12,8 +12,8 @@ export const Leaderboard = ({
   setFilter: (filter: string) => void;
   filter: string;
 }) => {
-  let lastScores = lastScoresProp;
-  let topScores = topScoresProp;
+  const lastScores = lastScoresProp;
+  const topScores = topScoresProp;
 
   return (
     <div className="leaderboard">
@@ -59,7 +59,7 @@ export const Leaderboard = ({
                       <tr key={index}>
                         <td>{formattedDate}</td>
                         <td>
-                          {player.username}#{player.id}
+                          {player.username}
                         </td>
                         <td>{player.time / 1000}s</td>
                       </tr>
@@ -72,7 +72,7 @@ export const Leaderboard = ({
                       <tr key={index}>
                         <td>{formattedDate}</td>
                         <td>
-                          {player.username}#{player.id}
+                          {player.username}
                         </td>
                         <td>{player.time / 1000}s</td>
                       </tr>

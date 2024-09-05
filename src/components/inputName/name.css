@@ -1,8 +1,19 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.user {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: fit-content;
+}
+
 .user-input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
     gap: 20px;
 }
 
@@ -17,6 +28,7 @@
     font-size: 18px;
     color: #000;
 }
+
 
 .user-input-button {
     width: 100px;
@@ -36,4 +48,6 @@
 
 .user-input-button:disabled {
     cursor: not-allowed;
+    opacity: 0.4;
+    color: rgba(0, 0, 0, 0.5);
 }

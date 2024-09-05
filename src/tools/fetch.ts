@@ -1,5 +1,4 @@
 export type Score = {
-    id: String;
     username: string;
     time: number;
     date: number;
@@ -11,11 +10,12 @@ export const save_score = (url: string, data: Score) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error('Network response was not ok: ' + response.statusText);
         }
         return response.json();
     })
