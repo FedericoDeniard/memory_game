@@ -14,6 +14,8 @@ import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
 import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
 
+import { BASE_URL } from "../../tools/fetch";
+
 const sortCards = (cardAmount: number) => {
   const images = [
     "assets/animals/bear.png",
@@ -116,7 +118,7 @@ export const Board = ({
         date: now,
       };
       save_score(
-        "http://localhost:3000/leaderboard/new_record",
+        `${BASE_URL}/leaderboard/new_record`,
         last_record
       )
         .then(() => {

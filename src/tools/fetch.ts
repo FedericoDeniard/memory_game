@@ -5,6 +5,7 @@ export type Score = {
 }
 
 export const save_score = (url: string, data: Score) => {
+    console.log(data)
     return fetch(url, {
         method: 'POST',
         headers: {
@@ -39,3 +40,4 @@ export const get_scores = async (url: string): Promise<Score[]> => {
     }
 }
 
+export const BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://api-memory-game-2.onrender.com";

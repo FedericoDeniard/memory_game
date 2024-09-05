@@ -1,5 +1,6 @@
 import "./name.css";
 import { useState, KeyboardEvent } from "react";
+import { BASE_URL } from "../../tools/fetch";
 
 export const UserForm = ({
   setUsername,
@@ -28,7 +29,7 @@ export const UserForm = ({
   }
 
 const login = async (username: string, password: string) => {      
-  const fetchUser = await fetch("http://localhost:3000/login", {
+  const fetchUser = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +44,7 @@ const login = async (username: string, password: string) => {
 
 const register = async () => {
   try {
-    const response = await fetch("http://localhost:3000/register", {
+    const response = await fetch(`${BASE_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

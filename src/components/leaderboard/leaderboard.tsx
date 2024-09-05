@@ -1,5 +1,6 @@
 import "./leaderboard.css";
 import { Score } from "../../tools/fetch";
+import { useEffect } from "react";
 
 export const Leaderboard = ({
   lastScoresProp,
@@ -14,6 +15,10 @@ export const Leaderboard = ({
 }) => {
   const lastScores = lastScoresProp;
   const topScores = topScoresProp;
+
+  useEffect(() => {
+    console.log(lastScores)
+  }, [lastScores]);
 
   return (
     <div className="leaderboard">

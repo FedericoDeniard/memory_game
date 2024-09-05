@@ -6,6 +6,8 @@ import { Score } from "./tools/fetch";
 import { get_scores } from "./tools/fetch";
 import { UserForm } from "./components/inputName/name";
 
+import { BASE_URL } from "./tools/fetch";
+
 function App() {
   const [username, setUsername] = useState<string>("");
 
@@ -19,11 +21,11 @@ function App() {
 
   const updateScores = async () => {
     const lastScoresFetch = await get_scores(
-      "http://localhost:3000/last-leaderboard"
+      `${BASE_URL}/last-leaderboard`
     );
     setLastScores(lastScoresFetch);
     const topScoresFetch = await get_scores(
-      "http://localhost:3000/top-leaderboard"
+    `${BASE_URL}/top-leaderboard`
     );
     setTopScores(topScoresFetch);
   };
