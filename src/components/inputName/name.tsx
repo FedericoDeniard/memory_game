@@ -1,5 +1,5 @@
 import "./name.css";
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, useEffect } from "react";
 import { BASE_URL } from "../../tools/fetch";
 
 export const UserForm = ({
@@ -85,6 +85,29 @@ const checkRegisterForm = () => {
   return !(isUsernameValid && isPasswordValid && isConfirmPasswordValid);
 }
 
+useEffect(() => {
+  const checkIsLoggedIn = async () => {
+    try {
+      const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      if (isLoggedIn.ok) {
+        const userData = await isLoggedIn.json();
+        setUsername(userData.username);
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
+    }
+  };
+
+  checkIsLoggedIn();
+}, []); 
+
+
   return (
     <div className="container">
   <div className="user">
@@ -102,7 +125,7 @@ const checkRegisterForm = () => {
       />
       <input
       className="user-input-input"
-      type="text"
+      type="password"
       placeholder="Password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
@@ -132,7 +155,7 @@ const checkRegisterForm = () => {
       />
       <input
       className="user-input-input"
-      type="text"
+      type="password"
       placeholder="Password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
@@ -140,7 +163,7 @@ const checkRegisterForm = () => {
       onKeyDown={handleKeyDownRegister}
       ></input>      <input
       className="user-input-input"
-      type="text"
+      type="password"
       placeholder="Confirm your password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
