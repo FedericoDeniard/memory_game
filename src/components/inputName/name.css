@@ -51,3 +51,11 @@
     opacity: 0.4;
     color: rgba(0, 0, 0, 0.5);
 }
+
+.guess-info h1{
+    margin-bottom: 0px ;
+}
+
+.guess-info p{
+    margin-top: 0px;
+}

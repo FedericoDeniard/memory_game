@@ -85,28 +85,6 @@ const checkRegisterForm = () => {
   return !(isUsernameValid && isPasswordValid && isConfirmPasswordValid);
 }
 
-useEffect(() => {
-  const checkIsLoggedIn = async () => {
-    try {
-      const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
-      if (isLoggedIn.ok) {
-        const userData = await isLoggedIn.json();
-        setUsername(userData.username);
-      }
-    } catch (error) {
-      console.error('Error checking login status:', error);
-    }
-  };
-
-  checkIsLoggedIn();
-}, []); 
-
 
   return (
     <div className="container">
@@ -180,7 +158,10 @@ useEffect(() => {
       </button>
     </div></div>
     <div className="user-guess">
+      <div className="guess-info">
       <h1>Play as guess</h1>
+      <p>Guess users can't save their scores</p>
+      </div>
       <input
         className="user-input-input"
         type="text"

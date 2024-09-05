@@ -34,6 +34,30 @@ function App() {
       updateScores();
   }, []);
 
+
+useEffect(() => {
+  const checkIsLoggedIn = async () => {
+    try {
+      const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      if (isLoggedIn.ok) {
+        const userData = await isLoggedIn.json();
+        setUsername(userData.username);
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
+    }
+  };
+
+  checkIsLoggedIn();
+}, []); 
+
+
   return (
     <>
       {username === "" ? (
