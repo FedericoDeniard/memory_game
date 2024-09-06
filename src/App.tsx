@@ -19,6 +19,7 @@ function App() {
 
   const [filter, setFilter] = useState<string>("last_10");
 
+  const [logChecked, setLogChecked] = useState<boolean>(false);
 
 
   const updateScores = async () => {
@@ -39,6 +40,7 @@ function App() {
 
 useEffect(() => {
   const checkIsLoggedIn = async () => {
+
     try {
       const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
         method: "POST",
@@ -55,6 +57,7 @@ useEffect(() => {
     } catch (error) {
       console.error('Error checking login status:', error);
     }
+    setLogChecked(true);
   };
 
   checkIsLoggedIn();
@@ -72,37 +75,50 @@ const logOut = async () => {
   });
 }
 
-
-
   return (
-    <>
-      {username === "" ? (
-        <UserForm setUsername={setUsername}  />
-      ) : (
-        <>
-          <div>
-            <h1>Memory Card Game</h1>
-            <h4>By Federico Deniard</h4>
-            <img className="logout" src={logOutSVG} onClick={() => {logOut()}}></img>
-          </div>
-          <div className="game">
-            <Board
-              cardAmount={ window.location.hostname === "localhost" ? 1 : 6}
-              updateScores={updateScores}
-              username={username}
-            />
-          </div>
-          <div className="leaderboard-container">
-            <Leaderboard
-              lastScoresProp={lastScores}
-              topScoresProp={topScores}
-              setFilter={setFilter}
-              filter={filter}
-            />
-          </div>
-        </>
-      )}
-    </>
+<>
+    {!logChecked ? (
+      <div className="main-loader-container">
+      <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+        </div>
+    ) : (
+      <>
+        {username === "" ? (
+          <UserForm setUsername={setUsername} />
+        ) : (
+          <>
+            <div>
+              <h1>Memory Card Game</h1>
+              <h4>By Federico Deniard</h4>
+              <img
+                className="logout"
+                src={logOutSVG}
+                onClick={() => logOut()}
+                alt="Logout"
+              />
+            </div>
+            <div className="game">
+              <Board
+                cardAmount={window.location.hostname === "localhost" ? 1 : 6}
+                updateScores={updateScores}
+                username={username}
+              />
+            </div>
+            <div className="leaderboard-container">
+              <Leaderboard
+                lastScoresProp={lastScores}
+                topScoresProp={topScores}
+                setFilter={setFilter}
+                filter={filter}
+              />
+            </div>
+          </>
+        )}
+      </>
+    )}
+  </>
   );
 }
 
