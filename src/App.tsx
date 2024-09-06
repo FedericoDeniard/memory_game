@@ -8,6 +8,8 @@ import { UserForm } from "./components/inputName/name";
 
 import { BASE_URL } from "./tools/fetch";
 
+import logOutSVG from "/assets/icons/log-out.svg";
+
 function App() {
   const [username, setUsername] = useState<string>("");
 
@@ -58,6 +60,19 @@ useEffect(() => {
   checkIsLoggedIn();
 }, []); 
 
+const logOut = async () => {
+  await fetch(`${BASE_URL}/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }).then(() => {
+    setUsername("");
+  });
+}
+
+
 
   return (
     <>
@@ -68,6 +83,7 @@ useEffect(() => {
           <div>
             <h1>Memory Card Game</h1>
             <h4>By Federico Deniard</h4>
+            <img className="logout" src={logOutSVG} onClick={() => {logOut()}}></img>
           </div>
           <div className="game">
             <Board
