@@ -68,6 +68,13 @@
     margin-top: 0px;
 }
 
+.user-guess {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
 /* Estilo del placeholder en general */
 ::placeholder {
     color: #000;

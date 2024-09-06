@@ -17,7 +17,7 @@ export const UserForm = ({
   const [guessUsername, setGuessUsername] = useState("");
 
   const handleKeyDownLogin = async (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !checkLoginForm()) {
       await login(loginUsername,loginPassword);
     } else if (event.key === ' ') {
             event.preventDefault();
@@ -25,7 +25,7 @@ export const UserForm = ({
   };
 
   const handleKeyDownRegister = async (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !checkRegisterForm()) {
       await register();
     } else if (event.key === ' ') {
             event.preventDefault();
@@ -77,8 +77,8 @@ const register = async () => {
   }
 }
 
-const guess = (event: KeyboardEvent<HTMLInputElement>) => {
-  if (event.key === "Enter"){
+const handleKeyDownOnGuess = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key === "Enter" ){
   setUsername(guessUsername);}
 }
 
@@ -108,7 +108,7 @@ const checkRegisterForm = () => {
         minLength={3}
         maxLength={10}
         pattern="[A-Za-z0-9]*"
-        onChange={(event) => event.target.value.replace(/\s+/g, '')}
+        onChange={(event) => setLoginUsername(event.target.value.replace(/\s+/g, ''))}
         onKeyDown={handleKeyDownLogin}
       />
       <input
@@ -117,7 +117,7 @@ const checkRegisterForm = () => {
       placeholder="Password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
-      onChange={(event) => setLoginPassword(event.target.value)}
+      onChange={(event) => setLoginPassword(event.target.value.replace(/\s+/g, ''))}
       onKeyDown={handleKeyDownLogin}
       ></input>
       <button
@@ -138,7 +138,7 @@ const checkRegisterForm = () => {
         minLength={3}
         maxLength={10}
         pattern="[A-Za-z0-9]*"
-        onChange={(event) => setRegisterUsername(event.target.value)}
+        onChange={(event) => setRegisterUsername(event.target.value.replace(/\s+/g, ''))}
         onKeyDown={handleKeyDownRegister}
       />
       <input
@@ -147,7 +147,7 @@ const checkRegisterForm = () => {
       placeholder="Password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
-      onChange={(event) => setRegisterPassword(event.target.value)}
+      onChange={(event) => setRegisterPassword(event.target.value.replace(/\s+/g, ''))}
       onKeyDown={handleKeyDownRegister}
       ></input>      <input
       className="user-input-input"
@@ -155,7 +155,7 @@ const checkRegisterForm = () => {
       placeholder="Confirm your password"
       minLength={6}
       pattern="[A-Za-z0-9]*"
-      onChange={(event) => setRegisterConfirmPassword(event.target.value)}
+      onChange={(event) => setRegisterConfirmPassword(event.target.value.replace(/\s+/g, ''))}
       onKeyDown={handleKeyDownRegister}
       ></input>
       <button
@@ -179,9 +179,17 @@ const checkRegisterForm = () => {
         minLength={3}
         maxLength={10}
         pattern="[A-Za-z0-9]*"
-        onChange={(event) => setGuessUsername(event.target.value)}
-        onKeyDown={guess}
+        onChange={(event) => setGuessUsername(event.target.value.replace(/\s+/g, ''))}
+        onKeyDown={handleKeyDownOnGuess}
       />
+        <button
+        className="user-input-button"
+        disabled={guessUsername.length < 3 || guessUsername.length > 10}
+        type="submit"
+        onClick={() => setUsername(guessUsername)}
+      >
+        Submit
+      </button>
       </div>
       </div>
     
