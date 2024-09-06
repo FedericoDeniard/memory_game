@@ -5,7 +5,6 @@ export type Score = {
 }
 
 export const save_score = (url: string, data: Score) => {
-    console.log(data)
     return fetch(url, {
         method: 'POST',
         headers: {

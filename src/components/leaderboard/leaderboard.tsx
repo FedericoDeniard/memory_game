@@ -17,7 +17,6 @@ export const Leaderboard = ({
   const topScores = topScoresProp;
 
   useEffect(() => {
-    console.log(lastScores)
   }, [lastScores]);
 
   return (
