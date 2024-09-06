@@ -70,9 +70,11 @@ const sortCards = (cardAmount: number) => {
 export const Board = ({
   cardAmount,
   updateScores,
+  username
 }: {
   cardAmount: number;
   updateScores: () => void;
+  username: string;
 }) => {
 
   const chronometerRef = useRef<Chronometer | null>(null);
@@ -113,7 +115,7 @@ export const Board = ({
 
     
       const last_record: Score = {
-        username: "",
+        username: username,
         time: elapsedTime,
         date: now,
       };

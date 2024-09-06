@@ -47,6 +47,7 @@ useEffect(() => {
       });
       if (isLoggedIn.ok) {
         const userData = await isLoggedIn.json();
+        console.log('Response status:', userData.username);
         setUsername(userData.username);
       }
     } catch (error) {
@@ -70,8 +71,9 @@ useEffect(() => {
           </div>
           <div className="game">
             <Board
-              cardAmount={6}
+              cardAmount={1}
               updateScores={updateScores}
+              username={username}
             />
           </div>
           <div className="leaderboard-container">

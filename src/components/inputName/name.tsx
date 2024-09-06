@@ -1,5 +1,5 @@
 import "./name.css";
-import { useState, KeyboardEvent, useEffect } from "react";
+import { useState, KeyboardEvent } from "react";
 import { BASE_URL } from "../../tools/fetch";
 
 export const UserForm = ({
