@@ -57,7 +57,7 @@ useEffect(() => {
   const typedError = error as Error; 
   console.log(`${typedError.name}: ${typedError.message}`);
 }
-    setLogChecked(false); // TODO
+    setLogChecked(true); 
     
   };
 
