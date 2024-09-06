@@ -57,7 +57,8 @@ useEffect(() => {
   const typedError = error as Error; 
   console.log(`${typedError.name}: ${typedError.message}`);
 }
-    setLogChecked(true);
+    setLogChecked(false); // TODO
+    
   };
 
   checkIsLoggedIn();
@@ -79,6 +80,7 @@ const logOut = async () => {
 <>
     {!logChecked ? (
       <div className="main-loader-container">
+      <p className="main-loader-text">Loading... <br /> This can take a few minutes</p>
       <div className="loader-container">
           <div className="loader"></div>
         </div>
