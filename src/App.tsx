@@ -71,7 +71,7 @@ useEffect(() => {
           </div>
           <div className="game">
             <Board
-              cardAmount={1}
+              cardAmount={ window.location.hostname === "localhost" ? 1 : 6}
               updateScores={updateScores}
               username={username}
             />
