@@ -19,13 +19,17 @@ export const UserForm = ({
   const handleKeyDownLogin = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       await login(loginUsername,loginPassword);
-    }
+    } else if (event.key === ' ') {
+            event.preventDefault();
+          }
   };
 
   const handleKeyDownRegister = async (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       await register();
-    }
+    } else if (event.key === ' ') {
+            event.preventDefault();
+          }
   }
 
 const login = async (username: string, password: string) => {
@@ -104,7 +108,7 @@ const checkRegisterForm = () => {
         minLength={3}
         maxLength={10}
         pattern="[A-Za-z0-9]*"
-        onChange={(event) => setLoginUsername(event.target.value)}
+        onChange={(event) => event.target.value.replace(/\s+/g, '')}
         onKeyDown={handleKeyDownLogin}
       />
       <input
