@@ -20,8 +20,8 @@ export const save_score = (url: string, data: Score) => {
         return response.json();
     })
     .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        throw error;
+          const typedError = error as Error; 
+  console.log(`${typedError.name}: ${typedError.message}`);
     });
 }
 

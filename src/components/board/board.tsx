@@ -127,7 +127,7 @@ export const Board = ({
           updateScores();
         })
         .catch((error) => {
-          console.error("Error saving score:", error);
+          console.error(error.name + ": " + error.message);
         });
     
 

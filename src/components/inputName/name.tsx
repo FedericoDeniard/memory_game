@@ -58,12 +58,13 @@ const register = async () => {
       setLoginPassword(registerPassword);
       await login(registerUsername, registerPassword);
     } else {
-      const errorText = await response.text(); // Obtener el mensaje de error
-      console.error('Failed to register:', errorText);
-      alert("Failed to register");
+      const errorText = await response.json();
+      const errorMessage = `${errorText.name}: ${errorText.message}`;
+      alert(errorMessage);
     }
   } catch (error) {
-    console.error('Error during registration:', error);
+      const typedError = error as Error;
+  console.log(`${typedError.name}: ${typedError.message}`);
   }
 }
 

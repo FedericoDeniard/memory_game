@@ -51,12 +51,12 @@ useEffect(() => {
       });
       if (isLoggedIn.ok) {
         const userData = await isLoggedIn.json();
-        console.log('Response status:', userData.username);
         setUsername(userData.username);
       }
     } catch (error) {
-      console.error('Error checking login status:', error);
-    }
+  const typedError = error as Error; 
+  console.log(`${typedError.name}: ${typedError.message}`);
+}
     setLogChecked(true);
   };
 
