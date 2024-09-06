@@ -28,7 +28,7 @@ export const UserForm = ({
     }
   }
 
-const login = async (username: string, password: string) => {      
+const login = async (username: string, password: string) => {
   const fetchUser = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
@@ -39,6 +39,11 @@ const login = async (username: string, password: string) => {
       if (fetchUser.ok) {
         const userData = await fetchUser.json();
         setUsername(userData.username);
+      }
+      else {
+      const errorText = await fetchUser.json();
+      const errorMessage = `${errorText.name}: ${errorText.message}`;
+      alert(errorMessage);
       }
 }
 
