@@ -1,8 +1,6 @@
-
-
 export const get_date = () => {
-    let now = new Date();
-    let date = now.getTime();
+    const now = new Date();
+    const date = now.getTime();
     return date
 }
 export class Chronometer {
@@ -11,22 +9,22 @@ export class Chronometer {
     private timerInterval: number | null = null;
 
     private timeToString(time: number): string {
-        let diffInHrs = time / 3600000;
-        let hh = Math.floor(diffInHrs);
+        const diffInHrs = time / 3600000;
+        const hh = Math.floor(diffInHrs);
 
-        let diffInMin = (diffInHrs - hh) * 60;
-        let mm = Math.floor(diffInMin);
+        const diffInMin = (diffInHrs - hh) * 60;
+        const mm = Math.floor(diffInMin);
 
-        let diffInSec = (diffInMin - mm) * 60;
-        let ss = Math.floor(diffInSec);
+        const diffInSec = (diffInMin - mm) * 60;
+        const ss = Math.floor(diffInSec);
 
-        let diffInMs = (diffInSec - ss) * 1000;
-        let ms = Math.floor(diffInMs);
+        const diffInMs = (diffInSec - ss) * 1000;
+        const ms = Math.floor(diffInMs);
 
-        let formattedHH = hh.toString().padStart(2, "0");
-        let formattedMM = mm.toString().padStart(2, "0");
-        let formattedSS = ss.toString().padStart(2, "0");
-        let formattedMS = ms.toString().padStart(3, "0");
+        const formattedHH = hh.toString().padStart(2, "0");
+        const formattedMM = mm.toString().padStart(2, "0");
+        const formattedSS = ss.toString().padStart(2, "0");
+        const formattedMS = ms.toString().padStart(3, "0");
 
         return `${formattedHH}:${formattedMM}:${formattedSS}:${formattedMS}`;
     }
