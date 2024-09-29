@@ -4,67 +4,123 @@ import { Board } from "./components/board/board";
 import { Leaderboard } from "./components/leaderboard/leaderboard";
 import { Score } from "./tools/fetch";
 import { get_scores } from "./tools/fetch";
-import { InputName } from "./components/inputName/name";
-import { top_10, last_10 } from "./components/sorts/sorts";
+import { UserForm } from "./components/inputName/name";
+
+import { BASE_URL } from "./tools/fetch";
+
+import logOutSVG from "/assets/icons/log-out.svg";
 
 function App() {
-  const [scores, setScores] = useState<Score[]>([]);
   const [username, setUsername] = useState<string>("");
-  const [uuid, setUuid] = useState<string>("");
 
-  const [filter, setFilter] = useState<string>("");
 
-  useEffect(() => {
-    setUuid(crypto.randomUUID());
-  }, []);
+  const [lastScores, setLastScores] = useState<Score[]>([]);
+  const [topScores, setTopScores] = useState<Score[]>([]);
 
-  useEffect(() => {
-    updateScores();
-  }, []);
-  const updateScores = () => {
-    get_scores("https://api-memory-game.onrender.com/leaderboard")
-      .then((data) => {
-        if (filter === "last_10") {
-          last_10({ scores, setScores });
-        } else if (filter === "top_10") {
-          top_10({ scores, setScores });
-        }
+  const [filter, setFilter] = useState<string>("last_10");
 
-        setScores(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching scores:", error);
-      });
+  const [logChecked, setLogChecked] = useState<boolean>(false);
+
+
+  const updateScores = async () => {
+    const lastScoresFetch = await get_scores(
+      `${BASE_URL}/last-leaderboard`
+    );
+    setLastScores(lastScoresFetch);
+    const topScoresFetch = await get_scores(
+    `${BASE_URL}/top-leaderboard`
+    );
+    setTopScores(topScoresFetch);
   };
 
+  useEffect(() => {
+      updateScores();
+  }, []);
+
+
+useEffect(() => {
+  const checkIsLoggedIn = async () => {
+
+    try {
+      const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      if (isLoggedIn.ok) {
+        const userData = await isLoggedIn.json();
+        setUsername(userData.username);
+      }
+    } catch (error) {
+  const typedError = error as Error; 
+  console.log(`${typedError.name}: ${typedError.message}`);
+}
+    setLogChecked(true); 
+    
+  };
+
+  checkIsLoggedIn();
+}, []); 
+
+const logOut = async () => {
+  await fetch(`${BASE_URL}/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }).then(() => {
+    setUsername("");
+  });
+}
+
   return (
-    <>
-      {username === "" ? (
-        <InputName setUsername={setUsername} />
-      ) : (
-        <>
-          <div>
-            <h1>Memory Card Game</h1>
-            <h4>By Federico Deniard</h4>
-          </div>
-          <div className="game">
-            <Board
-              cardAmount={6}
-              usernameProp={username}
-              uuidProp={uuid}
-              updateScores={updateScores}
-            />
-          </div>
-          <div className="leaderboard-container">
-            <Leaderboard
-              scoresProp={scores}
-              setFilter={setFilter}
-              filter={filter}
-            />
-          </div>
-        </>
-      )}
-    </>
+<>
+    {!logChecked ? (
+      <div className="main-loader-container">
+      <p className="main-loader-text">Loading... <br /> This can take a few minutes</p>
+      <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+        </div>
+    ) : (
+      <>
+        {username === "" ? (
+          <UserForm setUsername={setUsername} />
+        ) : (
+          <>
+            <div>
+              <h1>Memory Card Game</h1>
+              <h4>By Federico Deniard</h4>
+              <img
+                className="logout"
+                src={logOutSVG}
+                onClick={() => logOut()}
+                alt="Logout"
+              />
+            </div>
+            <div className="game">
+              <Board
+                cardAmount={window.location.hostname === "localhost" ? 1 : 6}
+                updateScores={updateScores}
+                username={username}
+              />
+            </div>
+            <div className="leaderboard-container">
+              <Leaderboard
+                lastScoresProp={lastScores}
+                topScoresProp={topScores}
+                setFilter={setFilter}
+                filter={filter}
+              />
+            </div>
+          </>
+        )}
+      </>
+    )}
+  </>
   );
 }
 

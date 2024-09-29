@@ -11,8 +11,10 @@ import badSound from "../../sounds/jingles_NES10.ogg";
 import winSound from "../../sounds/jingles_NES03.ogg";
 import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
 
-import { get_scores, save_score, Score } from "../../tools/fetch";
+import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
+
+import { BASE_URL } from "../../tools/fetch";
 
 const sortCards = (cardAmount: number) => {
   const images = [
@@ -48,8 +50,8 @@ const sortCards = (cardAmount: number) => {
     "assets/animals/zebra.png",
   ];
 
-  let selectedCards: string[] = [];
-  let selectedNumbers: number[] = [];
+  const selectedCards: string[] = [];
+  const selectedNumbers: number[] = [];
 
   for (let i = 0; i < cardAmount; i++) {
     let randomNumber = Math.floor(Math.random() * images.length);
@@ -67,17 +69,13 @@ const sortCards = (cardAmount: number) => {
 
 export const Board = ({
   cardAmount,
-  usernameProp,
-  uuidProp,
   updateScores,
+  username
 }: {
   cardAmount: number;
-  usernameProp: string;
-  uuidProp: string;
   updateScores: () => void;
+  username: string;
 }) => {
-  const username = usernameProp;
-  const uuid = uuidProp;
 
   const chronometerRef = useRef<Chronometer | null>(null);
   const [cards, setCards] = useState(sortCards(cardAmount));
@@ -114,36 +112,29 @@ export const Board = ({
     stopChronometer();
     const elapsedTime = getElapsedTime();
     const now = get_date();
-    const last_record: Score = {
-      id: uuid,
-      username: username,
-      time: elapsedTime,
-      date: now,
-    };
 
-    get_scores("https://api-memory-game.onrender.com/leaderboard").then(
-      (data) => {
-        const uuidExists = data.findIndex((score) => score.id === uuid);
-        if (uuidExists === -1 || data[uuidExists].time > elapsedTime) {
-          save_score(
-            "https://api-memory-game.onrender.com/leaderboard/new_record",
-            last_record
-          )
-            .then(() => {
-              updateScores();
-            })
-            .catch((error) => {
-              console.error("Error saving score:", error);
-            });
-        }
-      }
-    );
+    
+      const last_record: Score = {
+        username: username,
+        time: elapsedTime,
+        date: now,
+      };
+      save_score(
+        `${BASE_URL}/leaderboard/new_record`,
+        last_record
+      )
+        .then(() => {
+          updateScores();
+        })
+        .catch((error) => {
+          console.error(error.name + ": " + error.message);
+        });
+    
 
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
     playShuffleSound();
-    console.log(last_record);
 
     resetChronometer();
     startChronometer();

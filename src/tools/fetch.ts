@@ -1,8 +1,7 @@
 export type Score = {
-    id: string;
     username: string;
     time: number;
-    date: string;
+    date: number;
 }
 
 export const save_score = (url: string, data: Score) => {
@@ -11,31 +10,33 @@ export const save_score = (url: string, data: Score) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error('Network response was not ok: ' + response.statusText);
         }
         return response.json();
     })
     .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        throw error;
+          const typedError = error as Error; 
+  console.log(`${typedError.name}: ${typedError.message}`);
     });
 }
 
-
-export const get_scores = (url: string): Promise<Score[]> => {
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            throw error;
-        });
+export const get_scores = async (url: string): Promise<Score[]> => {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
 }
+
+export const BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://api-memory-game-2.onrender.com";

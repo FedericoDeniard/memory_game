@@ -16,3 +16,27 @@
   gap: 20px;
   justify-content: center;
 }
+
+.logout {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.main-loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+
+.main-loader-text {
+  position: absolute;
+  bottom: 50%;
+  
+}

@@ -1,8 +1,27 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: fit-content;
+}
+
+@media (max-width: 768px) {
+  .user {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .user-input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
     gap: 20px;
 }
 
@@ -17,6 +36,7 @@
     font-size: 18px;
     color: #000;
 }
+
 
 .user-input-button {
     width: 100px;
@@ -36,4 +56,51 @@
 
 .user-input-button:disabled {
     cursor: not-allowed;
+    opacity: 0.4;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.guess-info h1{
+    margin-bottom: 0px ;
+}
+
+.guess-info p{
+    margin-top: 0px;
+}
+
+.user-guess {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Estilo del placeholder en general */
+::placeholder {
+    color: #000;
+    opacity: .5; 
+}
+
+/* Safari específico */
+::-webkit-input-placeholder {
+    color: #000;
+    opacity: .5;
+}
+
+/* Firefox específico */
+::-moz-placeholder {
+    color: #000;
+    opacity: .5;
+}
+
+/* Internet Explorer 10-11 específico */
+:-ms-input-placeholder {
+    color: #000;
+    opacity: .5;
+}
+
+/* Edge específico */
+::-ms-input-placeholder {
+    color: #000;
+    opacity: .5;
 }
