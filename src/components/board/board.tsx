@@ -70,13 +70,12 @@ const sortCards = (cardAmount: number) => {
 export const Board = ({
   cardAmount,
   updateScores,
-  username
+  username,
 }: {
   cardAmount: number;
   updateScores: () => void;
   username: string;
 }) => {
-
   const chronometerRef = useRef<Chronometer | null>(null);
   const [cards, setCards] = useState(sortCards(cardAmount));
   const [clickedCards, setClickedCards] = useState<number[]>([]);
@@ -88,6 +87,8 @@ export const Board = ({
   const [playBadSound] = useSound(badSound);
   const [playWinSound] = useSound(winSound);
   const [playShuffleSound] = useSound(shuffleCards);
+
+  const [sendingScore, setSendingScore] = useState(false);
 
   const startChronometer = () => {
     if (!chronometerRef.current) {
@@ -108,29 +109,51 @@ export const Board = ({
     return chronometerRef.current?.getElapsedTime() || 0;
   };
 
+  const getFormattedElapsedTime = () => {
+    return chronometerRef.current?.getFormattedElapsedTime() || "00:00";
+  };
+
+  const [elapsedTime, setElapsedTime] = useState("00:00");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedTime(getFormattedElapsedTime());
+    }, 1);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const resetGame = () => {
-    stopChronometer();
     const elapsedTime = getElapsedTime();
     const now = get_date();
 
-    
-      const last_record: Score = {
-        username: username,
-        time: elapsedTime,
-        date: now,
-      };
-      save_score(
-        `${BASE_URL}/leaderboard/new_record`,
-        last_record
-      )
-        .then(() => {
-          updateScores();
-        })
-        .catch((error) => {
-          console.error(error.name + ": " + error.message);
-        });
-    
+    const last_record: Score = {
+      username: username,
+      time: elapsedTime,
+      date: now,
+    };
+    save_score(`${BASE_URL}/leaderboard/new_record`, last_record)
+      .then(() => {
+        updateScores();
+      })
+      .catch((error) => {
+        console.error(error.name + ": " + error.message);
+      })
+      .finally(() => {
+        setSendingScore(false);
+      });
 
+    setCards(sortCards(cardAmount));
+    setClickedCards([]);
+    setGuessedCards([]);
+    playShuffleSound();
+
+    resetChronometer();
+    startChronometer();
+  };
+
+  const restartGame = () => {
+    stopChronometer();
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
@@ -149,6 +172,8 @@ export const Board = ({
 
   useEffect(() => {
     if (guessedCards.length === cards.length) {
+      setSendingScore(true);
+      stopChronometer();
       const soundTimer = setTimeout(() => {
         playWinSound();
       }, 500);
@@ -213,10 +238,20 @@ export const Board = ({
   };
 
   return (
-    <>
+    <div>
+      <div className="game-buttons">
+        <button
+          className="reset-game"
+          onClick={restartGame}
+          disabled={sendingScore}
+        >
+          Reset Game
+        </button>
+        <p className="time"> {elapsedTime} </p>
+      </div>
       <div className="board" style={gridStyle}>
         {showCards(cards)}
       </div>
-    </>
+    </div>
   );
 };
