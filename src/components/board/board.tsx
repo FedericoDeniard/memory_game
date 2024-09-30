@@ -98,7 +98,6 @@ export const Board = ({
   const finishGame = () => {
     const elapsedTime = chronometer.getElapsedTime();
     const now = get_date();
-    console.log(elapsedTime);
 
     const last_record: Score = {
       username: username,

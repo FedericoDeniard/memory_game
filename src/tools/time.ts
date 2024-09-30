@@ -1,8 +1,4 @@
-export const get_date = () => {
-  const now = new Date();
-  const date = now.getTime();
-  return date;
-};
+export const get_date = Date.now;
 export class Chronometer {
   private startTime: number = 0;
   private elapsedTime: number = 0;
