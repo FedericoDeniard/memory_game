@@ -119,7 +119,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    Mixer.play(GameSounds.SHUFFLE);
+    Mixer.playNext(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -130,7 +130,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    Mixer.play(GameSounds.SHUFFLE);
+    Mixer.playNext(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -141,16 +141,13 @@ export const Board = ({
       setSendingScore(true);
       chronometer.stop();
 
-      const soundTimer = setTimeout(() => {
-        Mixer.play(GameSounds.WIN);
-      }, 500);
+      Mixer.playNext(GameSounds.WIN);
 
       const resetTimer = setTimeout(() => {
         finishGame();
       }, 3000);
 
       return () => {
-        clearTimeout(soundTimer);
         clearTimeout(resetTimer);
       };
     }
@@ -184,20 +181,18 @@ export const Board = ({
     ) {
       const newClickedCards = [...clickedCards, index];
       setClickedCards(newClickedCards);
-      Mixer.play(GameSounds.CARD_ONE);
+      Mixer.playNext(GameSounds.CARD_ONE);
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
-          Mixer.play(GameSounds.GOOD);
+          Mixer.playNext(GameSounds.GOOD);
         } else {
-          Mixer.play(GameSounds.BAD);
+          Mixer.playNext(GameSounds.BAD);
         }
-        setTimeout(() => {
-          setClickedCards([]);
-          if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
-            Mixer.play(GameSounds.CARD_TWO);
-          }
-        }, 1000);
+        setClickedCards([]);
+        if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
+          Mixer.playNext(GameSounds.CARD_TWO);
+        }
       }
     }
   };
