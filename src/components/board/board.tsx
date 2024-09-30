@@ -3,13 +3,7 @@ import "./board.css";
 import { fisherYatesShuffle } from "../sorts/sorts";
 import { useEffect, useState, useRef } from "react";
 
-import useSound from "use-sound";
-import cardSoundOne from "../../sounds/card-place-1.ogg";
-import cardSoundTwo from "../../sounds/card-place-4.ogg";
-import goodSound from "../../sounds/jingles_NES09.ogg";
-import badSound from "../../sounds/jingles_NES10.ogg";
-import winSound from "../../sounds/jingles_NES03.ogg";
-import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
+import { useMixer, Sounds } from "../../tools/music";
 
 import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
@@ -83,12 +77,7 @@ export const Board = ({
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
 
-  const [playSoundCardOne] = useSound(cardSoundOne);
-  const [playSoundCardTwo] = useSound(cardSoundTwo);
-  const [playGoodSound] = useSound(goodSound);
-  const [playBadSound] = useSound(badSound);
-  const [playWinSound] = useSound(winSound);
-  const [playShuffleSound] = useSound(shuffleCards);
+  const playSound = useMixer();
 
   const [sendingScore, setSendingScore] = useState(false);
 
@@ -128,7 +117,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    playShuffleSound();
+    playSound(Sounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -139,7 +128,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    playShuffleSound();
+    playSound(Sounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -151,7 +140,7 @@ export const Board = ({
       chronometer.stop();
 
       const soundTimer = setTimeout(() => {
-        playWinSound();
+        playSound(Sounds.WIN);
       }, 500);
 
       const resetTimer = setTimeout(() => {
@@ -193,18 +182,18 @@ export const Board = ({
     ) {
       const newClickedCards = [...clickedCards, index];
       setClickedCards(newClickedCards);
-      playSoundCardOne();
+      playSound(Sounds.CARD_ONE);
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
-          playGoodSound();
+          playSound(Sounds.GOOD);
         } else {
-          playBadSound();
+          playSound(Sounds.BAD);
         }
         setTimeout(() => {
           setClickedCards([]);
           if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
-            playSoundCardTwo();
+            playSound(Sounds.CARD_TWO);
           }
         }, 1000);
       }
