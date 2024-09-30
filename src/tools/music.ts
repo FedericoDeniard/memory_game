@@ -18,7 +18,7 @@ export class Mixer {
    * Plays a sound inmediatly
    * @param soundKey the sound to play
    */
-  public static play = (soundKey: GameSounds | string) => {
+  public static play = (soundKey: string) => {
     const audio = new Audio(soundKey);
     audio.play().then(() => (this.playing = audio));
 
@@ -31,14 +31,14 @@ export class Mixer {
    * Adds the sound into a queue and plays the queue
    * @param soundKey the sound to play
    */
-  public static playNext = (soundKey: GameSounds | string) => {
+  public static playNext = (soundKey: string) => {
     this.queue.enqueue(soundKey);
     if (this.playingQueue === null) {
       this.playNextInQueue();
     }
   };
 
-  private static playFromQueue = (soundKey: GameSounds | string) => {
+  private static playFromQueue = (soundKey: string) => {
     const audio = new Audio(soundKey);
     this.playingQueue = audio;
     audio.play();
