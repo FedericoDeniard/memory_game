@@ -196,7 +196,6 @@ export const Board = ({
       }
     }
   };
-
   const gridStyle = {
     gridTemplateColumns: `repeat(${
       (cards.length / 2) % 2 === 0 ? 4 : 3

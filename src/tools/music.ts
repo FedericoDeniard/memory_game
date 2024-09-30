@@ -10,10 +10,14 @@ export enum GameSounds {
 }
 
 export class Mixer {
-  static playing: HTMLAudioElement | null = null;
-  static playingQueue: HTMLAudioElement | null = null;
+  private static playing: HTMLAudioElement | null = null;
+  private static playingQueue: HTMLAudioElement | null = null;
   private static queue = new Queue();
 
+  /**
+   * Plays a sound inmediatly
+   * @param soundKey the sound to play
+   */
   public static play = (soundKey: GameSounds | string) => {
     const audio = new Audio(soundKey);
     audio.play().then(() => (this.playing = audio));
@@ -23,6 +27,10 @@ export class Mixer {
     });
   };
 
+  /**
+   * Adds the sound into a queue and plays the queue
+   * @param soundKey the sound to play
+   */
   public static playNext = (soundKey: GameSounds | string) => {
     this.queue.enqueue(soundKey);
     if (this.playingQueue === null) {
