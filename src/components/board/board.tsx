@@ -76,7 +76,9 @@ export const Board = ({
   updateScores: () => void;
   username: string;
 }) => {
-  const chronometerRef = useRef<Chronometer | null>(null);
+  const chronometerRef = useRef<Chronometer>(new Chronometer());
+  const chronometer = chronometerRef.current;
+
   const [cards, setCards] = useState(sortCards(cardAmount));
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
@@ -90,42 +92,22 @@ export const Board = ({
 
   const [sendingScore, setSendingScore] = useState(false);
 
-  const startChronometer = () => {
-    if (!chronometerRef.current) {
-      chronometerRef.current = new Chronometer();
-    }
-    chronometerRef.current.start();
-  };
-
-  const stopChronometer = () => {
-    chronometerRef.current?.stop();
-  };
-
-  const resetChronometer = () => {
-    chronometerRef.current?.reset();
-  };
-
-  const getElapsedTime = () => {
-    return chronometerRef.current?.getElapsedTime() || 0;
-  };
-
-  const getFormattedElapsedTime = () => {
-    return chronometerRef.current?.getFormattedElapsedTime() || "00:00";
-  };
-
   const [elapsedTime, setElapsedTime] = useState("00:00");
+
+  const [gameRunning, setGameRunning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedTime(getFormattedElapsedTime());
-    }, 1);
+      setElapsedTime(chronometer.getFormattedElapsedTime());
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
 
-  const resetGame = () => {
-    const elapsedTime = getElapsedTime();
+  const finishGame = () => {
+    const elapsedTime = chronometer.getElapsedTime();
     const now = get_date();
+    console.log(elapsedTime);
 
     const last_record: Score = {
       username: username,
@@ -148,38 +130,32 @@ export const Board = ({
     setGuessedCards([]);
     playShuffleSound();
 
-    resetChronometer();
-    startChronometer();
+    chronometer.reset();
+    setGameRunning(false);
   };
 
   const restartGame = () => {
-    stopChronometer();
+    chronometer.stop();
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
     playShuffleSound();
 
-    resetChronometer();
-    startChronometer();
+    chronometer.reset();
+    setGameRunning(false);
   };
-
-  useEffect(() => {
-    startChronometer();
-    return () => {
-      stopChronometer();
-    };
-  }, []);
 
   useEffect(() => {
     if (guessedCards.length === cards.length) {
       setSendingScore(true);
-      stopChronometer();
+      chronometer.stop();
+
       const soundTimer = setTimeout(() => {
         playWinSound();
       }, 500);
 
       const resetTimer = setTimeout(() => {
-        resetGame();
+        finishGame();
       }, 3000);
 
       return () => {
@@ -206,6 +182,10 @@ export const Board = ({
   };
 
   const handleCardClick = (index: number) => {
+    if (!gameRunning) {
+      setGameRunning(true);
+      chronometer.start();
+    }
     if (
       clickedCards.length < 2 &&
       !clickedCards.includes(index) &&

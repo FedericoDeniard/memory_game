@@ -31,7 +31,7 @@ export class Chronometer {
 
   public start(): void {
     if (this.timerInterval !== null) {
-      return;
+      throw new Error("Chronometer is already running");
     }
     this.startTime = Date.now() - this.elapsedTime;
     this.timerInterval = window.setInterval(() => {
@@ -40,19 +40,28 @@ export class Chronometer {
   }
 
   public stop(): void {
-    if (this.timerInterval !== null) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
+    if (this.timerInterval === null) {
+      throw new Error("Chronometer is not running");
     }
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
   }
 
   public reset(): void {
     if (this.timerInterval !== null) {
       clearInterval(this.timerInterval);
     }
-    this.startTime = Date.now(); // Reset start time to current time
     this.elapsedTime = 0;
-    this.start(); // Restart the timer
+    this.startTime = 0;
+  }
+
+  public restart(): void {
+    if (this.timerInterval !== null) {
+      clearInterval(this.timerInterval);
+    }
+    this.timerInterval = null;
+    this.elapsedTime = 0;
+    this.start();
   }
 
   public getElapsedTime(): number {
