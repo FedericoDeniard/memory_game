@@ -3,7 +3,7 @@ import "./board.css";
 import { fisherYatesShuffle } from "../sorts/sorts";
 import { useEffect, useState, useRef } from "react";
 
-import { Mixer, Sounds } from "../../tools/music";
+import { Mixer, GameSounds } from "../../tools/music";
 
 import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
@@ -92,7 +92,7 @@ export const Board = ({
   }, []);
 
   useEffect(() => {
-    Mixer.play(Sounds.SHUFFLE);
+    Mixer.play(GameSounds.SHUFFLE);
   }, []);
 
   const finishGame = () => {
@@ -119,7 +119,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    Mixer.play(Sounds.SHUFFLE);
+    Mixer.play(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -130,7 +130,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    Mixer.play(Sounds.SHUFFLE);
+    Mixer.play(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -142,7 +142,7 @@ export const Board = ({
       chronometer.stop();
 
       const soundTimer = setTimeout(() => {
-        Mixer.play(Sounds.WIN);
+        Mixer.play(GameSounds.WIN);
       }, 500);
 
       const resetTimer = setTimeout(() => {
@@ -184,18 +184,18 @@ export const Board = ({
     ) {
       const newClickedCards = [...clickedCards, index];
       setClickedCards(newClickedCards);
-      Mixer.play(Sounds.CARD_ONE);
+      Mixer.play(GameSounds.CARD_ONE);
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
-          Mixer.play(Sounds.GOOD);
+          Mixer.play(GameSounds.GOOD);
         } else {
-          Mixer.play(Sounds.BAD);
+          Mixer.play(GameSounds.BAD);
         }
         setTimeout(() => {
           setClickedCards([]);
           if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
-            Mixer.play(Sounds.CARD_TWO);
+            Mixer.play(GameSounds.CARD_TWO);
           }
         }, 1000);
       }

@@ -1,4 +1,4 @@
-export enum Sounds {
+export enum GameSounds {
   CARD_ONE = "/memory_game/sounds/card-place-1.ogg",
   CARD_TWO = "/memory_game/sounds/card-place-4.ogg",
   GOOD = "/memory_game/sounds/jingles_NES09.ogg",
@@ -8,7 +8,7 @@ export enum Sounds {
 }
 
 export class Mixer {
-  public static play = (soundKey: Sounds | string) => {
+  public static play = (soundKey: GameSounds | string) => {
     const audio = new Audio(soundKey);
     audio.play();
   };
