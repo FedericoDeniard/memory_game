@@ -13,7 +13,6 @@ import logOutSVG from "/assets/icons/log-out.svg";
 function App() {
   const [username, setUsername] = useState<string>("");
 
-
   const [lastScores, setLastScores] = useState<Score[]>([]);
   const [topScores, setTopScores] = useState<Score[]>([]);
 
@@ -21,106 +20,100 @@ function App() {
 
   const [logChecked, setLogChecked] = useState<boolean>(false);
 
-
   const updateScores = async () => {
-    const lastScoresFetch = await get_scores(
-      `${BASE_URL}/last-leaderboard`
-    );
+    const lastScoresFetch = await get_scores(`${BASE_URL}/last-leaderboard`);
     setLastScores(lastScoresFetch);
-    const topScoresFetch = await get_scores(
-    `${BASE_URL}/top-leaderboard`
-    );
+    const topScoresFetch = await get_scores(`${BASE_URL}/top-leaderboard`);
     setTopScores(topScoresFetch);
   };
 
   useEffect(() => {
-      updateScores();
+    updateScores();
   }, []);
 
-
-useEffect(() => {
-  const checkIsLoggedIn = async () => {
-
-    try {
-      const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+  useEffect(() => {
+    const checkIsLoggedIn = async () => {
+      try {
+        const isLoggedIn = await fetch(`${BASE_URL}/refresh-login`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (isLoggedIn.ok) {
+          const userData = await isLoggedIn.json();
+          setUsername(userData.username);
         }
-      });
-      if (isLoggedIn.ok) {
-        const userData = await isLoggedIn.json();
-        setUsername(userData.username);
+      } catch (error) {
+        const typedError = error as Error;
+        console.log(`${typedError.name}: ${typedError.message}`);
       }
-    } catch (error) {
-  const typedError = error as Error; 
-  console.log(`${typedError.name}: ${typedError.message}`);
-}
-    setLogChecked(true); 
-    
+      setLogChecked(true);
+    };
+
+    checkIsLoggedIn();
+  }, []);
+
+  const logOut = async () => {
+    await fetch(`${BASE_URL}/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).finally(() => {
+      setUsername("");
+    });
   };
 
-  checkIsLoggedIn();
-}, []); 
-
-const logOut = async () => {
-  await fetch(`${BASE_URL}/logout`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    }
-  }).then(() => {
-    setUsername("");
-  });
-}
-
   return (
-<>
-    {!logChecked ? (
-      <div className="main-loader-container">
-      <p className="main-loader-text">Loading... <br /> This can take a few minutes</p>
-      <div className="loader-container">
-          <div className="loader"></div>
+    <>
+      {!logChecked ? (
+        <div className="main-loader-container">
+          <p className="main-loader-text">
+            Loading... <br /> This can take a few minutes
+          </p>
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
         </div>
-        </div>
-    ) : (
-      <>
-        {username === "" ? (
-          <UserForm setUsername={setUsername} />
-        ) : (
-          <>
-            <div>
-              <h1>Memory Card Game</h1>
-              <h4>By Federico Deniard</h4>
-              <img
-                className="logout"
-                src={logOutSVG}
-                onClick={() => logOut()}
-                alt="Logout"
-              />
-            </div>
-            <div className="game">
-              <Board
-                cardAmount={window.location.hostname === "localhost" ? 1 : 6}
-                updateScores={updateScores}
-                username={username}
-              />
-            </div>
-            <div className="leaderboard-container">
-              <Leaderboard
-                lastScoresProp={lastScores}
-                topScoresProp={topScores}
-                setFilter={setFilter}
-                filter={filter}
-              />
-            </div>
-          </>
-        )}
-      </>
-    )}
-  </>
+      ) : (
+        <>
+          {username === "" ? (
+            <UserForm setUsername={setUsername} />
+          ) : (
+            <>
+              <div>
+                <h1>Memory Card Game</h1>
+                <h4>By Federico Deniard</h4>
+                <img
+                  className="logout"
+                  src={logOutSVG}
+                  onClick={() => logOut()}
+                  alt="Logout"
+                />
+              </div>
+              <div className="game">
+                <Board
+                  cardAmount={window.location.hostname === "localhost" ? 1 : 6}
+                  updateScores={updateScores}
+                  username={username}
+                />
+              </div>
+              <div className="leaderboard-container">
+                <Leaderboard
+                  lastScoresProp={lastScores}
+                  topScoresProp={topScores}
+                  setFilter={setFilter}
+                  filter={filter}
+                />
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </>
   );
 }
 
