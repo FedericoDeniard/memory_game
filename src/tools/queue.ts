@@ -1,39 +1,38 @@
-export class Queue {
-  items: any[];
+export class Queue<Type> {
+  items: Type[];
   constructor() {
     this.items = [];
   }
 
-  enqueue(element: any) {
+  public enqueue(element: Type): void {
     this.items.push(element);
   }
 
-  dequeue() {
-    if (this.isEmpty()) {
-      return "La cola está vacía";
+  public dequeue(): void {
+    if (!this.isEmpty()) {
+      this.items.shift();
     }
-    return this.items.shift();
   }
 
-  front() {
+  public first(): Type | undefined {
     if (this.isEmpty()) {
-      return "La cola está vacía";
+      return undefined;
     }
     return this.items[0];
   }
 
-  back() {
+  public last(): Type | undefined {
     if (this.isEmpty()) {
-      return "La cola está vacía";
+      return undefined;
     }
     return this.items[this.items.length - 1];
   }
 
-  isEmpty() {
+  public isEmpty(): boolean {
     return this.items.length === 0;
   }
 
-  size() {
+  public size(): number {
     return this.items.length;
   }
 }
