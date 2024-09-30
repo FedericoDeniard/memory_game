@@ -188,7 +188,11 @@ export const Board = ({
         } else {
           Mixer.playNext(GameSounds.BAD);
         }
-        setClickedCards([]);
+
+        //  This timeout is to show the cards for 2 seconds before resetting
+        setTimeout(() => {
+          setClickedCards([]);
+        }, 2000);
         if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
           Mixer.playNext(GameSounds.CARD_TWO);
         }
