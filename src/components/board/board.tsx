@@ -3,13 +3,7 @@ import "./board.css";
 import { fisherYatesShuffle } from "../sorts/sorts";
 import { useEffect, useState, useRef } from "react";
 
-import useSound from "use-sound";
-import cardSoundOne from "../../sounds/card-place-1.ogg";
-import cardSoundTwo from "../../sounds/card-place-4.ogg";
-import goodSound from "../../sounds/jingles_NES09.ogg";
-import badSound from "../../sounds/jingles_NES10.ogg";
-import winSound from "../../sounds/jingles_NES03.ogg";
-import shuffleCards from "../../sounds/cards-pack-take-out-1.ogg";
+import { Mixer, GameSounds } from "../../tools/music";
 
 import { save_score, Score } from "../../tools/fetch";
 import { get_date, Chronometer } from "../../tools/time";
@@ -83,13 +77,6 @@ export const Board = ({
   const [clickedCards, setClickedCards] = useState<number[]>([]);
   const [guessedCards, setGuessedCards] = useState<number[]>([]);
 
-  const [playSoundCardOne] = useSound(cardSoundOne);
-  const [playSoundCardTwo] = useSound(cardSoundTwo);
-  const [playGoodSound] = useSound(goodSound);
-  const [playBadSound] = useSound(badSound);
-  const [playWinSound] = useSound(winSound);
-  const [playShuffleSound] = useSound(shuffleCards);
-
   const [sendingScore, setSendingScore] = useState(false);
 
   const [elapsedTime, setElapsedTime] = useState("00:00");
@@ -102,6 +89,10 @@ export const Board = ({
     }, 50);
 
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    Mixer.play(GameSounds.SHUFFLE);
   }, []);
 
   const finishGame = () => {
@@ -128,7 +119,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    playShuffleSound();
+    Mixer.playNext(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -139,7 +130,7 @@ export const Board = ({
     setCards(sortCards(cardAmount));
     setClickedCards([]);
     setGuessedCards([]);
-    playShuffleSound();
+    Mixer.playNext(GameSounds.SHUFFLE);
 
     chronometer.reset();
     setGameRunning(false);
@@ -150,16 +141,13 @@ export const Board = ({
       setSendingScore(true);
       chronometer.stop();
 
-      const soundTimer = setTimeout(() => {
-        playWinSound();
-      }, 500);
+      Mixer.playNext(GameSounds.WIN);
 
       const resetTimer = setTimeout(() => {
         finishGame();
       }, 3000);
 
       return () => {
-        clearTimeout(soundTimer);
         clearTimeout(resetTimer);
       };
     }
@@ -193,24 +181,21 @@ export const Board = ({
     ) {
       const newClickedCards = [...clickedCards, index];
       setClickedCards(newClickedCards);
-      playSoundCardOne();
+      Mixer.playNext(GameSounds.CARD_ONE);
       if (newClickedCards.length === 2) {
         if (cards[newClickedCards[0]] === cards[newClickedCards[1]]) {
           setGuessedCards([...guessedCards, ...newClickedCards]);
-          playGoodSound();
+          Mixer.playNext(GameSounds.GOOD);
         } else {
-          playBadSound();
+          Mixer.playNext(GameSounds.BAD);
         }
-        setTimeout(() => {
-          setClickedCards([]);
-          if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
-            playSoundCardTwo();
-          }
-        }, 1000);
+        setClickedCards([]);
+        if (cards[newClickedCards[0]] !== cards[newClickedCards[1]]) {
+          Mixer.playNext(GameSounds.CARD_TWO);
+        }
       }
     }
   };
-
   const gridStyle = {
     gridTemplateColumns: `repeat(${
       (cards.length / 2) % 2 === 0 ? 4 : 3
