@@ -8,10 +8,11 @@ export class Queue<Type> {
     this.items.push(element);
   }
 
-  public dequeue(): void {
+  public dequeue(): Type | undefined {
     if (!this.isEmpty()) {
-      this.items.shift();
+      return this.items.shift();
     }
+    return undefined;
   }
 
   public first(): Type | undefined {

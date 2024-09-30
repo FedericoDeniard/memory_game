@@ -12,7 +12,7 @@ export enum GameSounds {
 export class Mixer {
   private static playing: HTMLAudioElement | null = null;
   private static playingQueue: HTMLAudioElement | null = null;
-  private static queue = new Queue();
+  private static queue = new Queue<string>();
 
   /**
    * Plays a sound inmediatly
@@ -25,6 +25,18 @@ export class Mixer {
     audio.addEventListener("ended", () => {
       this.playing = null;
     });
+  };
+
+  public static pause = () => {
+    if (this.playing !== null) {
+      this.playing.pause();
+    }
+  };
+
+  public static resume = () => {
+    if (this.playing !== null) {
+      this.playing.play();
+    }
   };
 
   /**
@@ -52,7 +64,7 @@ export class Mixer {
   private static playNextInQueue = () => {
     if (!this.queue.isEmpty()) {
       const nextSound = this.queue.dequeue();
-      this.playFromQueue(nextSound);
+      if (nextSound) this.playFromQueue(nextSound);
     }
   };
 
